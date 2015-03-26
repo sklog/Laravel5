@@ -1,0 +1,100 @@
+<?php namespace App\Http\Controllers;
+
+// вырезали на V: use DB;
+use App;
+use Input;
+use Orders;
+use Illuminate\Support\Facades\Validator;
+class CartController extends Controller {
+
+	/*
+	|--------------------------------------------------------------------------
+	| Welcome Controller
+	|--------------------------------------------------------------------------
+	|
+	| This controller renders the "marketing page" for the application and
+	| is configured to only allow guests. Like most of the other sample
+	| controllers, you are free to modify or remove it as you desire.
+	|
+	*/
+
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
+
+	/**
+	 * Show the application welcome screen to the user.
+	 *
+	 * @return Response
+	 */
+	public function getIndex()
+	{
+//		$arr=[]; //массив
+//		$db_arr=[];
+//		foreach($_COOKIE as $key=>$value) {
+//			$key=(int)$key;
+//			if($key>0) {
+//				$arr[$key]=$value;
+//				$db_arr[]=$key;
+//			}
+//		}
+//после создания провайдера закомментили
+
+		$arr=\App::make('\App\Libs\Cookie')->get(); //добавили после создания провайдера
+		$db_arr=\App::make('\App\Libs\Cookie')->get_db(); //добавили после создания провайдера
+		$tovars=\App\Products::whereIn('id', $db_arr)->get();
+		return view('cart')->with('tovars', $tovars)->with('arr', $arr);
+	}
+	
+	public function getDelete($id=null)
+	{
+		setcookie($id, '', time()-1, '/');
+		return redirect('cart');
+	}
+	
+	public function getAdd($id=null)
+	{
+		//dd($_POST); //dd в laravel улучшенная версия print_r
+		$colvo=1;
+		setcookie($id, $colvo, time()+3600, '/'); //4 параметр - путь хранения кук
+		return redirect('cart');
+	}
+    public function postAdd($id=null)
+    {
+        //dd($_POST); //dd в laravel улучшенная версия print_r
+        $colvo=$_POST['colvo'];
+        setcookie($id, $colvo, time()+3600, '/'); //4 параметр - путь хранения кук
+        return redirect('cart');
+    }
+    public function postOrder()
+    {
+        $body=serialize(\App::make('App\libs\Cookie'))->get();
+        //dd($body);
+        $data= Input::all();
+        $rules = array
+                    (   'phones'=>array('required')
+                    );
+        $validation = Validator::make($data,$rules);
+        if($validation->fails())
+        {
+            $errors=$validation->messages();
+        }
+        if(!empty($errors))
+        {
+            return redirect('cart')->withErrors($errors);
+        }
+        $zakaz = new Orders;
+        $zakaz->body=$body;
+        $zakaz->name=$data['name'];
+        $zakaz->phone=$data['phone'];
+        $zakaz->status='new';
+        $zakaz->ip=$_SERVER['REMOTE_ADDR'];
+    }
+		
+}
