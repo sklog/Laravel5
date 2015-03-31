@@ -1,7 +1,7 @@
 @extends('app')
 @section('content')
-	<h2>Система администрирования</h2>
-	<h3 style=align:center>Форма добавления товара</h3>
+	<h2 style="text-align:center;">Система администрирования</h2>
+	<h3 style="text-align:center;">Форма добавления товара</h3>
 	<form method='Post' action="{{asset('adminka')}}" enctype='multipart/form-data'>
 		<input type="hidden" name="_token" value="{{ csrf_token() }}">
 		<div class='container'>
@@ -19,19 +19,16 @@
 					<input type="file" name='picture'>
 				</div>
 				<div>
-					<label for="showhide">ShowHide</label>
-					<input type="checkbox" name='showhide' checked>Show
+					<label for="showhide">отображён на сайте</label>
+					<input type="checkbox" name='showhide' checked>
 				</div>
 				<div>
 					<label for="price">Цена</label>
 					<input type="text" name='price'>
 				</div>
 				<div>
-					<label for='category'>Категория</label>
-					<select name='category'>
-						<option selected value='1'>Категория 1</option>
-						<option value='2'>Категория 2</option>
-					</select>
+					<label for='cat_id'>Категория</label>
+					<input type='text' name='cat_id'>
 				</div>
 				<div>
 					<label for='vip'>VIP</label>

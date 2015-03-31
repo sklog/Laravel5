@@ -28,37 +28,46 @@ class MainController extends Controller {
 	
 	public function postEdit($id=null)
 	{
-		//print_r($_POST);
+		
 		$data=Input::all();
-		if($_FILES['picture']['error']==UPLOAD_ERR_OK) {
-			$tmp_name=$_FILES['picture']['tmp_name'];
-			$name=$_FILES['picture']['name'];
-			$dir=$_SERVER['DOCUMENT_ROOT'].'/media/images/products/';
-			$pic_name=date('y_m_d_h_i_s').$name;
-			if(is_uploaded_file($tmp_name)) {
-				move_uploaded_file($tmp_name, $dir.$pic_name);
+			//dd($data);
+       if($_FILES['picture']['error']==UPLOAD_ERR_OK) 
+	   {
+			$tmp_name=$_FILES['picture']['tmp_name']; //путь к временному файлу
+			$name=$_FILES['picture']['name']; //имя загружаемого файла
+			$dir=$_SERVER['DOCUMENT_ROOT'].'/media/images/products/'; //куда загружать файлы
+			$pic_name=date('y_m_d_h_i_s').$name; //новое имя для файла
+			if(is_uploaded_file($tmp_name)) 
+			{
+				move_uploaded_file($tmp_name, $dir.$pic_name); //откуда куда
 				$img=Image::make($dir.$pic_name);
-				$img->resize(150, null, function($constraint) {
+				$img->resize(150, null, function($constraint) 
+				{
 					$constraint->aspectRatio();
 				});
 				$pic_small='s_'.$pic_name;
 				$img->save($dir.$pic_small);
-			}
-		} else {
+			} 
+		} 
+		else 
+		{
 			$pic_name='';
 			$pic_small='';
 		}
 		$tovar=\App\Products::find($id);
-		if(isset($data['showhide'])) {
+		if(isset($data['showhide'])) 
+		{
 			$showhide='show';
-		} else {
+		} 
+		else
+		{
 			$showhide='hide';
 		}
 		$tovar->name=$data['name'];
 		$tovar->body=$data['body'];
 		$tovar->showhide=$showhide;
 		$tovar->price=$data['price'];
-		$tovar->cat_id=$data['category'];
+		$tovar->cat_id=$data['cat_id'];
 		$tovar->vip=$data['vip'];
 		$tovar->save();
 		return redirect ('/adminka');
@@ -100,7 +109,9 @@ class MainController extends Controller {
 		//echo '<pre>';
 		//print_r ($data);
 		//echo '</pre>';
-		if($_FILES['picture']['error']==UPLOAD_ERR_OK) {
+        //dd($_FILES);
+		if($_FILES['picture']['error']==UPLOAD_ERR_OK) 
+		{
 		//	print_r($_FILES);
 		//} else {
 		//	echo 'No file';
@@ -108,23 +119,30 @@ class MainController extends Controller {
 			$name=$_FILES['picture']['name']; //имя загружаемого файла
 			$dir=$_SERVER['DOCUMENT_ROOT'].'/media/images/products/'; //куда загружать файлы
 			$pic_name=date('y_m_d_h_i_s').$name; //новое имя для файла
-			if(is_uploaded_file($tmp_name)) {
+			if(is_uploaded_file($tmp_name)) 
+			{
 				move_uploaded_file($tmp_name, $dir.$pic_name); //откуда куда
 				$img=Image::make($dir.$pic_name);
-				$img->resize(150, null, function($constraint) {
-					$constraint->aspectRatio();
-				});
+				$img->resize(150, null, function($constraint) 
+												{
+													$constraint->aspectRatio();
+												});
 				$pic_small='s_'.$pic_name;
 				$img->save($dir.$pic_small);
 			} 
-		} else {
+		} 
+		else 
+		{
 			$pic_name='';
 			$pic_small='';
 		}
 		//exit;
-		if(isset($data['showhide'])) {
+		if(isset($data['showhide'])) 
+		{
 			$showhide='show';
-		} else {
+		} 
+		else 
+		{
 			$showhide='hide';
 		}
 		DB::table('products')->insert(array(

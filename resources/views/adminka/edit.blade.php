@@ -1,7 +1,7 @@
 @extends('app')
 @section('content')
-	<h2>Система администрирования</h2>
-	Форма редактирования товара
+	<h2 style="text-align:center;">Система администрирования</h2>
+	<h3 style="text-align:center;">Форма редактирования товара</h3>
 	<form method='Post' action="{{asset('adminka/edit/'.$tovar->id)}} enctype='multipart/form-data'">
 		<input type="hidden" name="_token" value="{{ csrf_token() }}">
 		<div class='container'>
@@ -20,21 +20,21 @@
 					<?$pic=''?>
 				@endif
 				<div><?=$pic?></div>
-				<div class="form-group">
-					<label for="picture">Изображение</label>
-					<input type="file" name='picture'>
-				</div>
+                <div class="form-group">
+                    <label for="picture">Изображение</label>
+                    <input type="file" name="picture" value="{{$tovar['picture']}}">
+                </div>
 				<div>
-					<label for="showhide">виден на сайте</label>
-					<input type="checkbox" name='showhide' <?=$tovar['showhide']=='show'?'checked':''?>>
+					<label for="showhide">ShowHide</label>
+					<input type="checkbox" name='showhide' <?=$tovar['showhide']=='show'?'checked':''?>>Show
 				</div>
 				<div>
 					<label for="price">Цена</label>
 					<input type="text" name='price' value="{{$tovar['price']}}">
 				</div>
 				<div>
-					<label for='category'>Категория</label>
-						<input type="text" name='price' value="{{$tovar['cat_id']}}">
+					<label for='cat_id'>Категория</label>
+					<input type='text' name='cat_id' value="{{$tovar['cat_id']}}">
 				</div>
 				<div>
 					<label for='vip'>VIP</label>
